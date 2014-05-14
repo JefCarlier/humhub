@@ -174,11 +174,14 @@
 </div>
 <!-- end: Modal -->
 
-
 <script type="text/javascript">
 
+    // Replace the standard checkbox and radio buttons
+    $('body').find(':checkbox, :radio').flatelements();
 
     $(document).ready(function () {
+
+
 
         // Open the notification menu
         $('#icon-notifications').click(function () {
@@ -187,7 +190,7 @@
             $('#dropdown-notifications').find('li').remove();
 
             // append title and loader to dropdown
-            $('#dropdown-notifications').append('<li class="dropdown-header"><?php echo Yii::t('base', 'Notifications'); ?></li><li id="loader_notifications"><div class="loader"></div></li>');
+            $('#dropdown-notifications').append('<li class="dropdown-header"><div class="arrow"></div><?php echo Yii::t('base', 'Notifications'); ?></li><li id="loader_notifications"><div class="loader"></div></li>');
 
             // load newest notifications
             $.ajax({
@@ -205,23 +208,20 @@
         // load number of new notifications at page loading
         getNotifications();
 
-        // load number of new notifications and messages in a loop
+        // load number of new notifications in a loop
         setInterval(getNotifications, 60000);
 
 
-        // load and show new count of notifications and messages
+        // load and show new count of notifications
         function getNotifications() {
 
             var $newNotifications = parseInt(0);
-            var $newMessages = parseInt(0);
 
             // load data
             jQuery.getJSON("<?php echo $this->createUrl('//dashboard/dashboard/GetFrontEndInfo'); ?>", function (json) {
 
                 // save numbers to variables
                 $newNotifications = parseInt(json.newNotifications);
-
-                //alert($newNotifications);
 
                 // show or hide the badge for new notifications
                 if ($newNotifications == 0) {
@@ -231,19 +231,6 @@
                     $('#badge-notifications').append($newNotifications);
                     $('#badge-notifications').fadeIn('fast');
                 }
-
-                <?php // Do better  ?>
-                <?php if (Yii::app()->moduleManager->isEnabled('mail')) : ?>
-                // show or hide the badge for new messages
-                $newMessages = parseInt(json.newMessages);
-                if ($newMessages == 0) {
-                    $('#badge-messages').css('display', 'none');
-                } else {
-                    $('#badge-messages').empty();
-                    $('#badge-messages').append($newMessages);
-                    $('#badge-messages').fadeIn('fast');
-                }
-                <?php endif; ?>
 
             })
 
@@ -263,6 +250,15 @@
             $(this).html("");
         })
 
+    });
+
+    // set niceScroll to body element
+    $("body").niceScroll({
+        cursorwidth: "7",
+        cursorborder:"",
+        cursorcolor:"#555",
+        cursoropacitymax:"0.2",
+        railpadding:{top:120,right:3,left:0,bottom:20}
     });
 
 </script>

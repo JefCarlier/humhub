@@ -19,12 +19,15 @@
 
     <div class="form-group">
         <?php echo $form->labelEx($model, 'language'); ?>
-        <?php echo $form->dropDownList($model, 'language', array('en' => 'English', 'de' => 'Deutsch*', 'fr' => 'Francais*'), array('class' => 'form-control')); ?>
+        <?php echo $form->dropDownList($model, 'language', Yii::app()->params['availableLanguages'], array('class' => 'form-control')); ?>
         <?php echo $form->error($model, 'language'); ?>
     </div>
     <hr>
 
     <?php echo CHtml::submitButton(Yii::t('UserModule.base', 'Save'), array('class' => 'btn btn-primary')); ?>
+
+    <!-- show flash message after saving -->
+    <?php $this->widget('application.widgets.DataSavedWidget'); ?>
 
     <?php $this->endWidget(); ?>
 </div>

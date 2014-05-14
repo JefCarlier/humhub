@@ -7,13 +7,9 @@
  * @property Int $maxUsers the maximum of users in this dropdown
  * @property String $userSearchUrl the url of the search, to find the users
  * @property String $currentValue is the current value of the parent field.
- * @property String $templates.inputStructure is the HTML structure to replace the original input element.
  *
- * License: MIT License - http://www.opensource.org/licenses/mit-license.php
  */
 
-
-var chosen = "";
 var userCount = 0;
 
 $.fn.userpicker = function (options) {
@@ -26,11 +22,12 @@ $.fn.userpicker = function (options) {
         currentValue: "",
         renderType: "normal", // possible values are "normal", "partial"
         focus: false,
-        templates: {
-            inputStructure: '<div class="user_picker_container"><ul class="tag_input" id="invite_tags"><li id="tag_input"><input type="text" id="tag_input_field" class="tag_input_field" value="" autocomplete="off" placeholder="Add an user"></li></ul><ul class="dropdown-menu" id="userpicker" role="menu" aria-labelledby="dropdownMenu"></ul></div>'
-        }
-
+        userGuid: "",
+        placeholderText: 'Add an user'
     }, options);
+
+    var chosen = "";
+    var uniqueID = "";
 
 
     init();
@@ -38,11 +35,18 @@ $.fn.userpicker = function (options) {
 
     function init() {
 
-        // remove picker if existing
-        $('.user_picker_container').remove();
+        uniqueID = options.inputId.substr(1);
 
-        // insert the new input structure after the original input element
-        $(options.inputId).after(options.templates.inputStructure);
+        var _template = '<div class="' + uniqueID + '_user_picker_container"><ul class="tag_input" id="' + uniqueID + '_invite_tags"><li id="' + uniqueID + '_tag_input"><input type="text" id="' + uniqueID + '_tag_input_field" class="tag_input_field" value="" autocomplete="off"></li></ul><ul class="dropdown-menu" id="' + uniqueID + '_userpicker" role="menu" aria-labelledby="dropdownMenu"></ul></div>';
+
+        // remove picker if existing
+        //$('.'+uniqueID+'_user_picker_container').remove();
+        if ($('.' + uniqueID + '_user_picker_container').length == 0) {
+
+            // insert the new input structure after the original input element
+            $(options.inputId).after(_template);
+        }
+
 
         // hide original input element
         $(options.inputId).hide();
@@ -53,20 +57,23 @@ $.fn.userpicker = function (options) {
             restoreUserTags(options.currentValue);
         }
 
+        // add placeholder text to input field
+        $('#' + uniqueID + '_tag_input_field').attr('placeholder', options.placeholderText);
+
         if (options.focus == true) {
             // set focus to input
-            $('#tag_input_field').focus();
-            $('#invite_tags').addClass('focus');
+            $('#' + uniqueID + '_tag_input_field').focus();
+            $('#' + uniqueID + '_invite_tags').addClass('focus');
         }
 
         // simulate focus in
-        $('#tag_input_field').focusin(function() {
-            $('#invite_tags').addClass('focus');
+        $('#' + uniqueID + '_tag_input_field').focusin(function () {
+            $('#' + uniqueID + '_invite_tags').addClass('focus');
         })
 
         // simulate focus out
-        $('#tag_input_field').focusout(function() {
-            $('#invite_tags').removeClass('focus');
+        $('#' + uniqueID + '_tag_input_field').focusout(function () {
+            $('#' + uniqueID + '_invite_tags').removeClass('focus');
         })
 
     }
@@ -74,10 +81,10 @@ $.fn.userpicker = function (options) {
     function restoreUserTags(html) {
 
         // add html structure for input element
-        $('#invite_tags').prepend(html);
+        $('#' + uniqueID + '_invite_tags').prepend(html);
 
         // create function for every user tag to remove the element
-        $('#invite_tags .userInput i').each(function () {
+        $('#' + uniqueID + '_invite_tags .userInput i').each(function () {
 
             $(this).click(function () {
 
@@ -99,13 +106,13 @@ $.fn.userpicker = function (options) {
 
 
     // Set focus on the input field, by clicking the <ul> construct
-    jQuery('#invite_tags').click(function () {
+    jQuery('#' + uniqueID + '_invite_tags').click(function () {
 
         // set focus
-        $('#tag_input_field').focus();
+        $('#' + uniqueID + '_tag_input_field').focus();
     })
 
-    $('#tag_input_field').keydown(function (event) {
+    $('#' + uniqueID + '_tag_input_field').keydown(function (event) {
 
         // by pressing the tab key an the input is empty
         if ($(this).val() == "" && event.keyCode == 9) {
@@ -136,16 +143,16 @@ $.fn.userpicker = function (options) {
 
     })
 
-    $('#tag_input_field').keyup(function (event) {
+    $('#' + uniqueID + '_tag_input_field').keyup(function (event) {
 
         // start search after a specific count of characters
-        if ($('#tag_input_field').val().length >= 3) {
+        if ($('#' + uniqueID + '_tag_input_field').val().length >= 3) {
 
             // set userpicker position in bottom of the user input
-            $('#userpicker').css({
+            $('#' + uniqueID + '_userpicker').css({
                 position: "absolute",
-                top: $('#tag_input_field').position().top + 30,
-                left: $('#tag_input_field').position().left + 0
+                top: $('#' + uniqueID + '_tag_input_field').position().top + 30,
+                left: $('#' + uniqueID + '_tag_input_field').position().left + 0
             })
 
             if (event.keyCode == 40) {
@@ -153,11 +160,11 @@ $.fn.userpicker = function (options) {
                 // select next <li> element
                 if (chosen === "") {
                     chosen = 1;
-                } else if ((chosen + 1) < $('#userpicker li').length) {
+                } else if ((chosen + 1) < $('#' + uniqueID + '_userpicker li').length) {
                     chosen++;
                 }
-                $('#userpicker li').removeClass('selected');
-                $('#userpicker li:eq(' + chosen + ')').addClass('selected');
+                $('#' + uniqueID + '_userpicker li').removeClass('selected');
+                $('#' + uniqueID + '_userpicker li:eq(' + chosen + ')').addClass('selected');
                 return false;
 
             } else if (event.keyCode == 38) {
@@ -168,22 +175,22 @@ $.fn.userpicker = function (options) {
                 } else if (chosen > 0) {
                     chosen--;
                 }
-                $('#userpicker li').removeClass('selected');
-                $('#userpicker li:eq(' + chosen + ')').addClass('selected');
+                $('#' + uniqueID + '_userpicker li').removeClass('selected');
+                $('#' + uniqueID + '_userpicker li:eq(' + chosen + ')').addClass('selected');
                 return false;
 
             } else if (event.keyCode == 13 || event.keyCode == 9) {
 
                 // simulate click event
-                window.location.href = $('#userpicker .selected a').attr('href');
+                window.location.href = $('#' + uniqueID + '_userpicker .selected a').attr('href');
 
             } else {
 
                 // save the search string to variable
-                var str = $('#tag_input_field').val();
+                var str = $('#' + uniqueID + '_tag_input_field').val();
 
                 // show userpicker with the results
-                $('#userpicker').show();
+                $('#' + uniqueID + '_userpicker').show();
 
                 // load users
                 loadUser(str);
@@ -191,32 +198,32 @@ $.fn.userpicker = function (options) {
         } else {
 
             // hide userpicker
-            $('#userpicker').hide();
+            $('#' + uniqueID + '_userpicker').hide();
         }
 
 
     })
 
 
-    $('#tag_input_field').focusout(function () {
+    $('#' + uniqueID + '_tag_input_field').focusout(function () {
 
         // set the plain text including user guids to the original input or textarea element
-        $(options.inputId).val(parseUserInput());
+        $(options.inputId).val($.fn.userpicker.parseUserInput(uniqueID));
     })
 
 
     function loadUser(string) {
 
         // remove existings entries
-        $('#userpicker li').remove();
+        $('#' + uniqueID + '_userpicker li').remove();
 
         // show loader while loading
-        $('#userpicker').html('<li><div class="loader"></div></li>');
+        $('#' + uniqueID + '_userpicker').html('<li><div class="loader"></div></li>');
 
         jQuery.getJSON(options.searchUrl.replace('-keywordPlaceholder-', string), function (json) {
 
             // remove existings entries
-            $('#userpicker li').remove();
+            $('#' + uniqueID + '_userpicker li').remove();
 
 
             if (json.length > 0) {
@@ -224,12 +231,28 @@ $.fn.userpicker = function (options) {
 
                 for (var i = 0; i < json.length; i++) {
 
+                    var _takenStyle = "";
+                    var _takenData = false;
+
+                    // set options to link, that this entry is already taken or not available
+                    if ($('#' + uniqueID + '_' + json[i].guid).length != 0 || json[i].isMember == true || json[i].guid == options.userGuid) {
+                        _takenStyle = "opacity: 0.4;"
+                        _takenData = true;
+                    }
+
                     // build <li> entry
-                    var str = '<li><a tabindex="-1" href="javascript:addUserTag(\'' + json[i].guid + '\', \'' + json[i].image + '\', \'' + json[i].displayName + '\');"><img class="img-rounded" src="' + json[i].image + '" height="20" width="20" alt=""/> ' + json[i].displayName + '</a></li>';
+                    var str = '<li id="user_' + json[i].guid + '"><a style="' + _takenStyle + '" data-taken="' + _takenData + '" tabindex="-1" href="javascript:$.fn.userpicker.addUserTag(\'' + json[i].guid + '\', \'' + json[i].image + '\', \'' + json[i].displayName + '\', \'' + uniqueID + '\');"><img class="img-rounded" src="' + json[i].image + '" height="20" width="20" alt=""/> ' + json[i].displayName + '</a></li>';
 
                     // append the entry to the <ul> list
-                    $('#userpicker').append(str);
+                    $('#' + uniqueID + '_userpicker').append(str);
 
+
+                }
+
+                // check if the list is empty
+                if ($('#' + uniqueID + '_userpicker').children().length == 0) {
+                    // hide userpicker, if it is
+                    $('#' + uniqueID + '_userpicker').hide();
                 }
 
                 // reset the variable for arrows keys
@@ -238,18 +261,18 @@ $.fn.userpicker = function (options) {
             } else {
 
                 // hide userpicker, if no user was found
-                $('#userpicker').hide();
+                $('#' + uniqueID + '_userpicker').hide();
             }
 
 
             // remove hightlight
-            $("#userpicker li").removeHighlight();
+            $('#' + uniqueID + '_userpicker li').removeHighlight();
 
             // add new highlight matching strings
-            $("#userpicker li").highlight(string);
+            $('#' + uniqueID + '_userpicker li').highlight(string);
 
             // add selection to the first space entry
-            $('#userpicker li:eq(0)').addClass('selected');
+            $('#' + uniqueID + '_userpicker li:eq(0)').addClass('selected');
 
         })
     }
@@ -263,79 +286,86 @@ $.fn.userpicker = function (options) {
         var _html = '<div id="maxUsersHint" style="display: none;" class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">x</button><strong>Sorry!</strong> You can add a maximum of ' + options.maxUsers + ' users as admin for this group.</div>';
 
         // add hint to DOM
-        $('#invite_tags').after(_html);
+        $('#' + uniqueID + '_invite_tags').after(_html);
 
         // fadein hint
         $('#maxUsersHint').fadeIn('fast');
     }
 
+
 }
+
 
 // Add a usertag for invitation
-function addUserTag(guid, image_url, name) {
+$.fn.userpicker.addUserTag = function (guid, image_url, name, id) {
+
+    if ($('#user_' + guid + ' a').attr('data-taken') != "true") {
+
+        // Building a new <li> entry
+        var _tagcode = '<li class="userInput" id="' + id + '_' + guid + '"><img class="img-rounded" alt="24x24" data-src="holder.js/24x24" style="width: 24px; height: 24px;" src="' + image_url + '" alt="' + name + '" width="24" height="24" />' + name + '<i class="icon-remove-sign"></i></li>';
 
 
-    // Building a new <li> entry
-    var _tagcode = '<li class="userInput" id="' + guid + '"><img class="img-rounded" alt="24x24" data-src="holder.js/24x24" style="width: 24px; height: 24px;" src="' + image_url + '" alt="' + name + '" width="24" height="24" />' + name + '<i class="icon-remove-sign"></i></li>';
+        // insert the new created <li> entry into the <ul> construct
+        $('#' + id + '_tag_input').before(_tagcode);
 
+        // remove tag, by clicking the close icon
+        $('#' + id + '_' + guid + " i").click(function () {
 
-    // insert the new created <li> entry into the <ul> contruct
-    $('#tag_input').before(_tagcode);
+            // remove user tag
+            $('#' + id + '_' + guid).remove();
 
-    // remove tag, by clicking the close icon
-    $('#' + guid + " i").click(function () {
+            // reduce the count of added user
+            userCount--;
 
-        // remove user tag
-        $('#' + guid).remove();
+        })
 
-        // reduce the count of added user
-        userCount--;
+        // hide user results
+        $('#' + id + '_userpicker').hide();
 
-    })
+        // set focus to the input element
+        $('#' + id + '_tag_input_field').focus();
 
-    // hide user results
-    $('#userpicker').hide();
+        // Clear the textinput
+        $('#' + id + '_tag_input_field').val('');
 
-    // set focus to the input element
-    $('#tag_input_field').focus();
-
-    // Clear the textinput
-    $('#tag_input_field').val('');
-
-    // raise the count of added user
-    userCount++;
+    }
 
 
 }
 
-function parseUserInput() {
+$.fn.userpicker.parseUserInput = function (id) {
 
     // create and insert a dummy <div> element to work with
-    $('#invite_tags').after('<div id="inputResult"></div>')
+    $('#' + id + '_invite_tags').after('<div id="' + id + '_inputResult"></div>')
 
     // set html form input element to the new <div> element
-    $('#inputResult').html($('#invite_tags').html());
+    $('#' + id + '_inputResult').html($('#' + id + '_invite_tags').html());
 
 
-    $('#inputResult .userInput').each(function () {
+    $('#' + id + '_inputResult .userInput').each(function () {
+
+
+        // get user guid without unique userpicker id
+        var pureID = this.id.replace(id + '_', '');
 
         // add the user guid as plain text
-        $(this).after(this.id + ",");
+        $(this).after(pureID + ",");
 
         // remove the link
         $(this).remove();
     })
 
     // save the plain text
-    var result = $('#inputResult').text();
+    var result = $('#' + id + '_inputResult').text();
 
     // remove the dummy <div> element
-    $('#inputResult').remove();
+    $('#' + id + '_inputResult').remove();
 
-// return the plain text
+    // return the plain text
     return result;
 
 }
+
 
 $(document).ready(function () {
 

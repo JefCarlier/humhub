@@ -127,6 +127,37 @@ hr {
   top: 4px;
   right: -2px;
 }
+#topbar-first .notifications .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 10px;
+  content: " ";
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #fff;
+  z-index: 1035;
+}
+#topbar-first .notifications .arrow {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  z-index: 1001;
+  border-width: 11px;
+  left: 50%;
+  margin-left: -18px;
+  border-top-width: 0;
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+  top: -16px;
+  z-index: 1035;
+}
 #topbar-first .notifications #dropdown-notifications {
   width: 350px;
   margin-left: -148px;
@@ -293,14 +324,16 @@ ul.tag_input li img {
   cursor: pointer;
   line-height: 8px;
 }
-#userpicker li > a,
-#spacepicker li > a {
-  padding-left: 10px;
-}
-#userpicker li.selected,
-#spacepicker li.selected {
-  background-color: #eee;
-}
+/*.picker {
+  li > a {
+    padding-left: 10px;
+  }
+
+  li.selected {
+    //padding-left: 6px;
+    background-color: #eee;
+  }
+}*/
 .contentForm_options {
   margin-top: 10px;
 }
@@ -312,7 +345,8 @@ ul.tag_input li img {
   padding-left: 0;
   list-style: none;
 }
-.post-files {
+.post-files,
+.oembed_snippet {
   margin-top: 10px;
 }
 .activities {
@@ -389,6 +423,21 @@ ul.tag_input li img {
   left: 50px;
   font-size: 18px;
 }
+.contentForm_options {
+  min-height: 29px;
+}
+.contentForm-upload-progress {
+  margin-top: 18px;
+  margin-bottom: 10px !important;
+}
+.btn_container {
+  position: relative;
+}
+.btn_container .label-public {
+  position: absolute;
+  right: 40px;
+  top: 6px;
+}
 .mime {
   background-repeat: no-repeat;
   background-position: 0 0;
@@ -455,6 +504,9 @@ ul.tag_input li img {
     width: 300px !important;
     margin-left: 0 !important;
   }
+  #dropdown-notifications .arrow {
+    margin-left: -142px !important;
+  }
   .profile .media > a {
     float: none !important;
     margin-right: 0;
@@ -465,40 +517,4 @@ ul.tag_input li img {
   .profile .statistics {
     float: none !important;
   }
-  /*.wall-entry {
-  
-      .media > a {
-        float: none !important;
-  
-        img {
-          display: inline;
-        }
-  
-      }
-  
-      .comment .media > a {
-        float: left !important;
-  
-        img {
-          display: block;
-        }
-      }
-  
-      .media-body {
-        .media-heading {
-          position: absolute;
-          top: 20px;
-          left: 100px;
-  
-          small {
-            display: block;
-            padding-top: 5px;
-          }
-        }
-  
-        .content {
-          margin-top: 20px;
-        }
-      }
-    }*/
 }

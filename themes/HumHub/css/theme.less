@@ -204,8 +204,9 @@ h4 {
 
       font-size: 14px;
       font-weight: 500;
+      color: @colorFont3;
       a {
-        //color: @colorInfo3;
+        color: @colorFont3;
 
       }
 
@@ -290,12 +291,22 @@ h4 {
   -moz-box-shadow: 0 0 3px #dadada;
   border-radius: 4px;
 
+  h1 {
+    font-size: 22px;
+    font-weight: 200;
+    margin-top: 0px;
+  }
+
   .panel-heading {
     .heading;
   }
 
   .panel-body {
     padding: 10px;
+
+    p {
+      color: @colorFont5;
+    }
   }
 
   .statistics {
@@ -661,6 +672,15 @@ textarea {
   resize: none;
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url('../img/select_arrow.png') !important;
+  background-repeat: no-repeat;
+  background-position: right 13px;
+}
+
 // Placeholder text
 ::-webkit-input-placeholder {
   color: @colorFont4 !important;
@@ -931,6 +951,32 @@ a.list-group-item.active {
 }
 
 //
+// Tables
+// --------------------------------------------------
+table {
+  th {
+    font-size: 11px;
+    color: @colorFont4;
+    font-weight: normal;
+  }
+
+  .time {
+    font-size: 12px;
+  }
+
+  td {
+    a:hover {
+      color: @colorInfo2;
+    }
+  }
+
+}
+
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  padding: 6px 5px 4px 5px;
+}
+
+//
 // x) HumHub Components
 // --------------------------------------------------
 
@@ -1007,6 +1053,12 @@ ul.tag_input.focus {
 // Contentform error
 #contentFormError {
   color: @colorDanger1;
+}
+
+// Flash message after saving
+.data-saved {
+  padding-left: 10px;
+  color: @colorInfo2;
 }
 
 //
